@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -62,7 +63,7 @@ public class BugsTest {
     }
 
     private AssetVendor makeVendor(AssetVendorRelationshipLevel relationshipLevel) {
-        AssetVendor vendor = new AssetVendor(null, null, relationshipLevel, 0.0f);
+        AssetVendor vendor = new AssetVendor(UUID.randomUUID().toString(), null, relationshipLevel, 0.0f);
         return vendor;
     }
 }

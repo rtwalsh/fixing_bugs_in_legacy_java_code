@@ -14,6 +14,7 @@ class RelationshipBasedOptimizer {
         Iterator<Asset> iterator = searchResults.getFound().iterator();
         var showcaseFull = searchResults.getHotspot(Showcase).getMembers().size() > 0;
         var showcaseAssets = new ArrayList<Asset>();
+        var showcasesByVendor = new HashMap<String, ArrayList<Asset>>();
         var partnerAssets = new ArrayList<Asset>();
         var goldAssets = new ArrayList<Asset>();
         var silverAssets = new ArrayList<Asset>();
@@ -32,17 +33,21 @@ class RelationshipBasedOptimizer {
             // remember this partner asset
             partnerAssets.add(asset);
 
+            // if we don't yet have a showcase for this vendor, get one
+            if (showcaseAssets.size() == 0) {
+                showcaseAssets = getShowcaseAssetsForVendor(showcasesByVendor, asset.getVendor());
+            }
+
             // too many assets in showcase - put in top picks instead...
             if (showcaseAssets.size() >= 5) {
                 if (Objects.equals(showcaseAssets.get(0).getVendor(), asset.getVendor()))
                     searchResults.getHotspot(TopPicks).addMember(asset);
             } else {
-                // if there are already assets from a different vendor but not enough to hold showcase,
-                // clear showcase
-//                if (showcaseAssets.size() != 0)
-//                    if (!Objects.equals(showcaseAssets.get(0).getVendor(), asset.getVendor()))
-//                        if (showcaseAssets.size() < 3)
-//                            showcaseAssets.clear();
+                if (showcaseAssets.size() != 0)
+                    if (!Objects.equals(showcaseAssets.get(0).getVendor(), asset.getVendor()))
+                        if (showcaseAssets.size() < 3) {
+                            showcaseAssets = getShowcaseAssetsForVendor(showcasesByVendor, asset.getVendor());
+                        }
 
                 // add this asset to an empty showcase or showcase with same vendor in it
                 // if there's already another vendor, that vendor should take precedence!
@@ -80,5 +85,13 @@ class RelationshipBasedOptimizer {
         // LOL acw-14511: gold assets should appear in fold box when appropriate
         for (var asset : silverAssets)
             searchResults.getHotspot(Fold).addMember(asset);
+    }
+
+    private ArrayList<Asset> getShowcaseAssetsForVendor(HashMap<String, ArrayList<Asset>> showcasesByVendor, AssetVendor vendor) {
+        if (!showcasesByVendor.containsKey(vendor.getId())) {
+            showcasesByVendor.put(vendor.getId(), new ArrayList<Asset>());
+        }
+
+        return showcasesByVendor.get(vendor.getId());
     }
 }
