@@ -39,10 +39,10 @@ class RelationshipBasedOptimizer {
             } else {
                 // if there are already assets from a different vendor but not enough to hold showcase,
                 // clear showcase
-                if (showcaseAssets.size() != 0)
-                    if (!Objects.equals(showcaseAssets.get(0).getVendor(), asset.getVendor()))
-                        if (showcaseAssets.size() < 3)
-                            showcaseAssets.clear();
+//                if (showcaseAssets.size() != 0)
+//                    if (!Objects.equals(showcaseAssets.get(0).getVendor(), asset.getVendor()))
+//                        if (showcaseAssets.size() < 3)
+//                            showcaseAssets.clear();
 
                 // add this asset to an empty showcase or showcase with same vendor in it
                 // if there's already another vendor, that vendor should take precedence!

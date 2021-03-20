@@ -24,10 +24,11 @@ public class BugsTest {
         AssetVendor partnerVendor = makeVendor(AssetVendorRelationshipLevel.Partner);
         AssetVendor otherVendor = makeVendor(AssetVendorRelationshipLevel.Partner);
 
-        Asset missing = givenAssetsInResultsWithVendor(partnerVendor);
-        Asset disruptingAsset = givenAssetsInResultsWithVendor(otherVendor);
-
         List<Asset> expected = new ArrayList<Asset>();
+        expected.add(givenAssetsInResultsWithVendor(partnerVendor));
+
+        givenAssetsInResultsWithVendor(otherVendor);
+
         expected.add(givenAssetsInResultsWithVendor(partnerVendor));
         expected.add(givenAssetsInResultsWithVendor(partnerVendor));
         expected.add(givenAssetsInResultsWithVendor(partnerVendor));
@@ -35,7 +36,6 @@ public class BugsTest {
 
         whenOptimize();
 
-        thenHotspotDoesNotHave(HotspotKey.Showcase, missing);
         thenHotspotHasExactly(HotspotKey.Showcase, expected);
     }
 
