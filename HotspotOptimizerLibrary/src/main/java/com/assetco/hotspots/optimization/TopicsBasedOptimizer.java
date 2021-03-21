@@ -26,10 +26,6 @@ class TopicsBasedOptimizer {
             if (hotTopics.size() == 0)
                 hotTopicsSource.getTopics().forEach(hotTopics::add);
 
-            // make sure to at least highlight
-            if (getHottestTopicIn(asset, hotTopics) != null)
-                searchResults.getHotspot(Highlight).addMember(asset);
-
             // any topic wins first time
             if (hotTopic == null)
                 hotTopic = getHottestTopicIn(asset, hotTopics);
@@ -58,6 +54,11 @@ class TopicsBasedOptimizer {
             // enough to claim
             if (++showcased > 2)
                 break;
+        }
+
+        for (var asset : searchResults.getFound()) {
+            if (getHottestTopicIn(asset, hotTopics) != null)
+                searchResults.getHotspot(Highlight).addMember(asset);
         }
 
         // add our showcase assets to the hotspot
